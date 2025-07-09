@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Portfólio Luiz Camero</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+  /* RESET */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #0d1117;
+    color: #c9d1d9;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  button {
+    font-family: inherit;
+  }
+
+  /* PARTICULAS FUNDO */
+  #particle-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    background: #0d1117;
+  }
+
+  /* HEADER */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 64px;
+    background: rgba(13,17,23,0.85);
+    backdrop-filter: saturate(180%) blur(12px);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    z-index: 1001;
+  }
+  header h1 {
+    color: #58d68d;
+    font-weight: 700;
+    font-size: 1.9rem;
+    user-select: none;
+  }
+
+  nav {
+    display: flex;
+    gap: 28px;
+  }
+  nav a {
+    color: #8b949e;
+    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #58d68d;
+    border-radius: 1px;
+    transition: width 0.3s ease;
+  }
+  nav a:hover,
+  nav a:focus {
+    color: #58d68d;
+  }
+  nav a:hover::after,
+  nav a:focus::after {
+    width: 100%;
+  }
+
+  /* MENU HAMBURGER */
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 1100;
+    width: 28px;
+    height: 24px;
+    user-select: none;
+    perspective: 500px;
+  }
+  .menu-toggle div {
+    width: 28px;
+    height: 3px;
+    background: #58d68d;
+    border-radius: 3px;
+    transition: transform 0.4s ease, opacity 0.3s ease;
+    transform-origin: center;
+  }
+  .menu-toggle.active div:nth-child(1) {
+    transform: rotateX(45deg) translateY(7px);
+  }
+  .menu-toggle.active div:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-toggle.active div:nth-child(3) {
+    transform: rotateX(-45deg) translateY(-7px);
+  }
+
+  /* NAV MOBILE */
+  @media (max-width: 768px) {
+    nav {
+      position: fixed;
+      top: 64px;
+      right: -100%;
+      width: 220px;
+      height: calc(100vh - 64px);
+      background: #161b22;
+      flex-direction: column;
+      gap: 20px;
+      padding: 30px 20px;
+      transition: right 0.4s ease;
+      box-shadow: -6px 0 12px rgba(0,0,0,0.7);
+      border-left: 1px solid #22272e;
+      z-index: 1000;
+    }
+    nav.active {
+      right: 0;
+    }
+    .menu-toggle {
+      display: flex;
+    }
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 90px auto 60px;
+    padding: 0 20px;
+    user-select: none;
+  }
+
+  section {
+    margin-bottom: 70px;
+    opacity: 0;
+    transform: translateY(40px);
+    animation-fill-mode: forwards;
+  }
+  section.visible {
+    animation: fadeUp 0.8s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  section.visible.delay-1 {
+    animation-delay: 0.15s;
+  }
+  section.visible.delay-2 {
+    animation-delay: 0.3s;
+  }
+  section.visible.delay-3 {
+    animation-delay: 0.45s;
+  }
+  section.visible.delay-4 {
+    animation-delay: 0.6s;
+  }
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  h2 {
+    font-size: 2.6rem;
+    font-weight: 700;
+    border-left: 6px solid #58d68d;
+    padding-left: 14px;
+    margin-bottom: 24px;
+    color: #58d68d;
+    user-select: text;
+  }
+
+  /* SOBRE - PARALLAX */
+  #about {
+    position: relative;
+    background: linear-gradient(135deg, #13202e 0%, #0d1117 100%);
+    border-radius: 14px;
+    padding: 28px 32px;
+    box-shadow: 0 12px 36px rgba(14,22,33,0.8);
+    color: #c9d1d9;
+    overflow: hidden;
+    user-select: text;
+  }
+  #about::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    left: -40%;
+    width: 180%;
+    height: 180%;
+    background: radial-gradient(circle at center, rgba(88,214,141,0.3), transparent 70%);
+    filter: blur(60px);
+    z-index: 0;
+    transform: translateY(0);
+    transition: transform 1s ease-out;
+    pointer-events: none;
+  }
+  #about.visible::before {
+    transform: translateY(-25%);
+  }
+  #about p {
+    position: relative;
+    font-size: 1.28rem;
+    line-height: 1.7;
+    z-index: 1;
+  }
+
+  /* PROJETOS */
+  #projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 32px;
+  }
+  .project-card {
+    background: #161b22;
+    border-radius: 14px;
+    padding: 26px 30px;
+    box-shadow: 0 7px 30px rgba(88,214,141,0.15);
+    color: #b8c1ca;
+    cursor: pointer;
+    transition:
+      transform 0.5s cubic-bezier(0.4,0,0.2,1),
+      box-shadow 0.5s ease,
+      color 0.5s ease;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 180px;
+    perspective: 900px;
+  }
+  .project-card:hover,
+  .project-card:focus {
+    color: #58d68d;
+    box-shadow:
+      0 25px 45px rgba(88,214,141,0.6),
+      inset 0 0 8px #58d68d;
+  }
+  .project-card h3 {
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    user-select: text;
+    transition: color 0.5s ease;
+  }
+  .project-card p {
+    font-size: 1.05rem;
+    user-select: text;
+    margin-bottom: 12px;
+  }
+
+  /* efeito 3D tilt cards */
+  .project-card.tilt {
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  /* CONTATO */
+  #contact form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  #contact label {
+    font-weight: 600;
+    color: #8b949e;
+    user-select: text;
+  }
+  #contact input,
+  #contact textarea {
+    background: #0d1117;
+    border: none;
+    border-radius: 10px;
+    padding: 16px 18px;
+    color: #c9d1d9;
+    font-size: 1rem;
+    resize: vertical;
+    box-shadow: inset 0 0 6px rgba(88,214,141,0.15);
+    transition: box-shadow 0.3s ease;
+  }
+  #contact input:focus,
+  #contact textarea:focus {
+    outline: none;
+    box-shadow: 0 0 12px #58d68d;
+  }
+  #contact button {
+    background: linear-gradient(135deg, #58d68d, #33bb7b);
+    border: none;
+    padding: 16px 0;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: #0d1117;
+    cursor: pointer;
+    box-shadow: 0 12px 20px rgba(40,167,69,0.5);
+    transition: background 0.4s ease;
+    user-select: none;
+  }
+  #contact button:hover,
+  #contact button:focus {
+    background: linear-gradient(135deg, #44ad68, #2f9459);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px 16px;
+    color: #6e7781;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+
+<header>
+  <h1>Luiz Camero</h1>
+  <div class="menu-toggle" aria-label="Abrir menu" role="button" tabindex="0" aria-expanded="false">
+    <div></div><div></div><div></div>
+  </div>
+  <nav>
+    <a href="#about">Sobre</a>
+    <a href="#projects">Projetos</a>
+    <a href="#contact">Contato</a>
+  </nav>
+</header>
+
+<main>
+  <section id="about">
+    <h2>Sobre</h2>
+    <p>Renaldo Luiz Camero Junior, 19 anos, é um profissional experiente na área de programação, especializado no desenvolvimento web. Ele se destaca por criar projetos muito bem elaborados, com um visual atraente e moderno, que proporcionam uma experiência de usuário agradável e intuitiva. Seus sites contam com diversas funcionalidades e opções, cuidadosamente implementadas para garantir eficiência, organização e facilidade de navegação. Renaldo valoriza a qualidade do código, a estética do design e a funcionalidade completa, sempre buscando entregar soluções detalhadas e de alta performance.</p>
+  </section>
+
+  <section id="projects">
+    <h2>Projetos</h2>
+
+    <article class="project-card tilt" tabindex="0" aria-label="Projeto 1">
+      <h3>Projeto 1</h3>
+      <p>Site de portfólio com animações e design responsivo.</p>
+    </article>
+
+    <article class="project-card tilt" tabindex="0" aria-label="Projeto 2">
+      <h3>Projeto 2</h3>
+      <p>Aplicação web com dashboard interativo e gráficos dinâmicos.</p>
+    </article>
+
+    <article class="project-card tilt" tabindex="0" aria-label="Projeto 3">
+      <h3>Projeto 3</h3>
+      <p>Landing page para campanha de marketing com scroll animado.</p>
+    </article>
+
+    <article class="project-card tilt" tabindex="0" aria-label="Projeto 4">
+      <h3>Projeto 4</h3>
+      <p>Aplicação para criar, editar e organizar tarefas diárias.</p>
+    </article>
+
+    <article class="project-card tilt" tabindex="0" aria-label="Projeto 5">
+      <h3>Projeto 5</h3>
+      <p>Ferramenta para controle de despesas e receitas.</p>
+    </article>
+
+    <article class="project-card tilt" tabindex="0" aria-label="Projeto 6">
+      <h3>Projeto 6</h3>
+      <p>Catálogo de produtos com carrinho de compras funcional.</p>
+    </article>
+  </section>
+
+  <section id="contact">
+    <h2>Contato</h2>
+    <form id="contact-form" onsubmit="enviarWhatsApp(event)">
+      <label for="name">Nome</label>
+      <input type="text" id="name" placeholder="Seu nome" required />
+      <label for="message">Mensagem</label>
+      <textarea id="message" rows="5" placeholder="Digite sua mensagem aqui" required></textarea>
+      <button type="submit">Enviar</button>
+    </form>
+  </section>
+</main>
+
+<footer>
+  © 2025 Luiz Camero. Todos os direitos reservados.
+</footer>
+
+<script>
+  // PARTICULAS SIMPLES
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particlesArray = [];
+  const colors = ['#58d68d', '#44ad68', '#33bb7b'];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 2 + 1;
+      this.speedX = (Math.random() - 0.5) * 0.25;
+      this.speedY = (Math.random() - 0.5) * 0.25;
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.opacity = Math.random() * 0.6 + 0.2;
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if(this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+      if(this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${parseInt(this.color.slice(1,3),16)},${parseInt(this.color.slice(3,5),16)},${parseInt(this.color.slice(5,7),16)},${this.opacity.toFixed(2)})`;
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 6;
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function initParticles() {
+    particlesArray = [];
+    const count = Math.floor(window.innerWidth / 12);
+    for(let i=0; i<count; i++) {
+      particlesArray.push(new Particle());
+    }
+  }
+  initParticles();
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particlesArray.forEach(p => {
+      p.update();
+      p.draw();
+    });
+    requestAnimationFrame(animateParticles);
+  }
+  animateParticles();
+
+  // MENU TOGGLE
+  const menuToggle = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('nav');
+  menuToggle.addEventListener('click', () => {
+    menuToggle.classList.toggle('active');
+    nav.classList.toggle('active');
+    const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+    menuToggle.setAttribute('aria-expanded', String(!expanded));
+  });
+  menuToggle.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      menuToggle.click();
+    }
+  });
+
+  // REVEAL ON SCROLL
+  const sections = document.querySelectorAll('main section');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        if(entry.target.id === 'about') {
+          entry.target.classList.add('visible'); // para o parallax background
+        }
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(section => revealObserver.observe(section));
+
+  // 3D TILT EFFECT (vanilla)
+  const tiltElements = document.querySelectorAll('.project-card.tilt');
+  tiltElements.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const midX = rect.width / 2;
+      const midY = rect.height / 2;
+      const rotateX = ((y - midY) / midY) * 7;
+      const rotateY = ((x - midX) / midX) * 7;
+      card.style.transform = `perspective(600px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(600px) rotateX(0) rotateY(0)';
+      card.style.transition = 'transform 0.5s ease';
+      setTimeout(() => {
+        card.style.transition = '';
+      }, 500);
+    });
+  });
+
+  // Função para enviar mensagem via WhatsApp
+  function enviarWhatsApp(event) {
+    event.preventDefault();
+
+    const nome = document.getElementById('name').value.trim();
+    const mensagem = document.getElementById('message').value.trim();
+
+    if (!nome || !mensagem) {
+      alert('Por favor, preencha nome e mensagem.');
+      return;
+    }
+
+    const numeroWhats = '5518996541190'; // código do país + DDD + número
+    const texto = `*Formulário de Contato*%0A%0A*Nome:* ${encodeURIComponent(nome)}%0A*Mensagem:* ${encodeURIComponent(mensagem)}`;
+
+    const url = `https://wa.me/${numeroWhats}?text=${texto}`;
+
+    window.open(url, '_blank').focus();
+  }
+</script>
+
+</body>
+</html>
+
